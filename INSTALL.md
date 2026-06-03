@@ -5,7 +5,7 @@ Prerequisites
 To install ALPSCore, the following is needed:
 
  1. C++ compiler: g++ >= 4.8.1 OR Intel >= 15.0 OR Clang >= 3.2
- 2. CMake >= 3.1 and < 4.0 (*NOTE*: CMake 3.6.0 on Mac has a [known problem](https://github.com/ALPSCore/ALPSCore/wiki/Known-problems-and-workarounds); CMake 4.x removed the legacy FindBoost module — see Troubleshooting item 1 below)
+ 2. CMake >= 3.10, including CMake 4.x (*NOTE*: CMake 3.6.0 on Mac has a [known problem](https://github.com/ALPSCore/ALPSCore/wiki/Known-problems-and-workarounds))
  3. HDF5 library >= 1.8.x (*NOTE*: HDF5 1.10.0 had a [known problem](https://github.com/ALPSCore/ALPSCore/wiki/Known-problems-and-workarounds#some-hdf5-related-tests-fail); modern releases including 1.10.1+ and 1.14.x work fine)
  4. Boost >= 1.70.0 (1.70 introduced `BoostConfig.cmake`, required for CMake 4.x)
  5. Eigen 3.3.4 or later (can be requested to be downloaded automatically)
@@ -137,10 +137,29 @@ The ALPSCore library uses CMake as its build system.
 
        $ cmake .. -DBoost_ROOT=/opt/local/libexec/boost/1.81 ...
 
-2. To point CMake to the correct location of HDF5 library, set environment variable
+   On HPC systems using environment modules (e.g. OpenHPC/Lmod), Boost is often
+   installed with the cmake config files in a version-specific subdirectory that
+   `Boost_ROOT` may not find automatically. In that case, point `Boost_DIR`
+   directly at the directory containing `BoostConfig.cmake`:
+
+       $ cmake .. -DBoost_DIR=/path/to/boost/lib/cmake/Boost-<version> ...
+
+   For example, with OpenHPC and GCC 12.2.0:
+
+       $ cmake .. -DBoost_DIR=/opt/ohpc/pub/libs/gcc/12.2.0/boost/1.81.0/lib/cmake/Boost-1.81.0 ...
+
+2. **Eigen3 not found.** If CMake cannot locate Eigen3 automatically, pass its
+   include directory explicitly:
+
+       $ cmake .. -DEIGEN3_INCLUDE_DIR=/path/to/eigen3/include/eigen3 ...
+
+   On systems using environment modules, the path is typically
+   `$EIGEN3_ROOT/include` or `$EIGEN3_INC`.
+
+3. To point CMake to the correct location of HDF5 library, set environment variable
    `HDF5_ROOT=/path/to/hdf5` prior to CMake invocation.
 
-3. If your CMake run fails with a message `In source builds are disabled.  Please use a separate build directory`,
+4. If your CMake run fails with a message `In source builds are disabled.  Please use a separate build directory`,
    first make sure that you are *not* indeed attempting to build in the source
    directory. The error may be a lasting effect of a previous attempt at an
    in-source build, see
@@ -153,17 +172,17 @@ The ALPSCore library uses CMake as its build system.
         $ find .. -maxdepth 1 -name 'CMake*' -exec rm -rf {} +
         $ mv ../save_CMakeLists.txt ../CMakeLists.txt
 
-4. On most high performance computers with non-standard environments, e.g.
+5. On most high performance computers with non-standard environments, e.g.
    crays/blue genes, you will get the best results by using the wrapper
    compilers and enabling static linking (see ALPS_BUILD_TYPE in
    [CMake variables](https://github.com/ALPSCore/ALPSCore/wiki/CMake-and-environment-variables-affecting-ALPSCore-build).
 
-5. **MPI compiler mismatch warning.** If CMake prints a warning like
+6. **MPI compiler mismatch warning.** If CMake prints a warning like
    *"MPI compiler doesn't match the C++ compiler"*, this is usually harmless:
    ALPSCore uses the system C++ compiler and extracts MPI include/link flags
    separately. The build will succeed and MPI functionality will work correctly.
 
-6. See also a page listing [known problems](https://github.com/ALPSCore/ALPSCore/wiki/Known-problems-and-workarounds).
+7. See also a page listing [known problems](https://github.com/ALPSCore/ALPSCore/wiki/Known-problems-and-workarounds).
 
 
 Build your project with ALPSCore
