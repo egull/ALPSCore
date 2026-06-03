@@ -111,8 +111,8 @@ The ALPSCore library uses CMake as its build system.
    *Note for macOS users with OpenMPI:* a small number of MPI-related tests
    (e.g. `gf_new_test_mpi`, `mesh_test_mpi`) may be reported as failed due to
    a segfault inside `PMIx_Finalize` at process exit. All test assertions pass;
-   this is a known OpenMPI/PMIx bug on macOS and does not affect library
-   functionality.
+   this is a [known OpenMPI 5.x bug on macOS](https://github.com/open-mpi/ompi/issues/12273)
+   and does not affect library functionality.
 
 5. and install ALPSCore:
 
