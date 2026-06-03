@@ -7,7 +7,7 @@ To install ALPSCore, the following is needed:
  1. C++ compiler: g++ >= 4.8.1 OR Intel >= 15.0 OR Clang >= 3.2
  2. CMake >= 3.1 and < 4.0 (*NOTE*: CMake 3.6.0 on Mac has a [known problem](https://github.com/ALPSCore/ALPSCore/wiki/Known-problems-and-workarounds); CMake 4.x removed the legacy FindBoost module — see Troubleshooting item 1 below)
  3. HDF5 library >= 1.8.x (*NOTE*: HDF5 1.10.0 had a [known problem](https://github.com/ALPSCore/ALPSCore/wiki/Known-problems-and-workarounds#some-hdf5-related-tests-fail); modern releases including 1.10.1+ and 1.14.x work fine)
- 4. Boost >= 1.56.0
+ 4. Boost >= 1.70.0 (1.70 introduced `BoostConfig.cmake`, required for CMake 4.x)
  5. Eigen 3.3.4 or later (can be requested to be downloaded automatically)
 
 Optional requirements:
@@ -123,24 +123,19 @@ The ALPSCore library uses CMake as its build system.
 
 ### Troubleshooting ###
 
-1. **Boost not found / CMake 4.x incompatibility.**
-   CMake 4.0 removed the legacy `FindBoost` module. If your CMake configure
-   step fails with a message like *"Could not find a package configuration file
-   provided by Boost"*, use `CMAKE_PREFIX_PATH` instead of `BOOST_ROOT`:
+1. **Boost not found.**
+   ALPSCore only uses Boost headers and relies on Boost's own
+   `BoostConfig.cmake` (available since Boost 1.70). If CMake cannot find
+   Boost, point it to the directory that contains `BoostConfig.cmake` via
+   `Boost_ROOT` or `CMAKE_PREFIX_PATH`:
 
-       $ cmake .. -DCMAKE_PREFIX_PATH=/path/to/boost \
-                  -DBoost_NO_SYSTEM_PATHS=ON
+       $ cmake .. -DBoost_ROOT=/path/to/boost ...
+       # or equivalently:
+       $ cmake .. -DCMAKE_PREFIX_PATH=/path/to/boost ...
 
-   With CMake < 4.0, the older form still works:
+   On macports the config file is under `/opt/local/libexec/boost/<version>`:
 
-       $ cmake .. -DBOOST_ROOT=/path/to/boost \
-                  -DBoost_NO_SYSTEM_PATHS=ON \
-                  -DBoost_NO_BOOST_CMAKE=ON
-
-   On macports the Boost cmake config files are typically found under
-   `/opt/local/libexec/boost/<version>`, e.g.:
-
-       $ cmake .. -DCMAKE_PREFIX_PATH=/opt/local/libexec/boost/1.81 ...
+       $ cmake .. -DBoost_ROOT=/opt/local/libexec/boost/1.81 ...
 
 2. To point CMake to the correct location of HDF5 library, set environment variable
    `HDF5_ROOT=/path/to/hdf5` prior to CMake invocation.
