@@ -13,7 +13,7 @@ endif()
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
-# Enable PackageName_ROOT hint variables (CMake 3.12+, policy CMP0074 NEW)
+# Enable <PackageName>_ROOT hint variables (CMake 3.12+, CMP0074 NEW)
 if(POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
 endif()

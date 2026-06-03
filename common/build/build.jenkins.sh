@@ -3,7 +3,7 @@
 # all modules of ALPSCore
 
 # This script expects the following environment variables
-# BOOST_ROOT - location of the Boost installation (directory containing BoostConfig.cmake)
+# Boost_ROOT - location of the Boost installation (directory containing BoostConfig.cmake)
 # GTEST_ROOT - location for gtest sources/binaries
 # HDF5_ROOT - location for the HDF5 distribution
 # FAST_BUILD - don't remove old build files if set and true
@@ -36,7 +36,7 @@ done
 SCRIPTDIR=$(dirname $0)
 cd $SCRIPTDIR/../..
 
-echo "Using Boost at ${BOOST_ROOT:-<system default>}"
+echo "Using Boost at ${Boost_ROOT:-<system default>}"
 
 INSTALLDIR=$PWD/install
 BUILDDIR=$PWD/build.tmp
@@ -59,7 +59,7 @@ cmake \
   -DTesting=ON \
   -DExtensiveTesting=ON \
   -DCMAKE_BUILD_TYPE=Release \
-  -DBoost_ROOT="${BOOST_ROOT}" \
+  -DBoost_ROOT="${Boost_ROOT}" \
   -DGTEST_ROOT="${GTEST_ROOT}" \
   -DENABLE_MPI=TRUE \
   -DTestXMLOutput=TRUE \
